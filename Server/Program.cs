@@ -52,7 +52,6 @@ namespace uHub
                     actions.RemoveAt(0);
                 }
             }
-            Log("Console Thread Closed");
         }
     }
 }

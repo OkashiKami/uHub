@@ -167,7 +167,6 @@ class ClientDataHandler
             view.RecieveRotation(Quaternion.Euler(x, y, z));
         }
     }
-
     private static void SP_GotTransformPosition(byte[] data)
     {
         long packetnum; ByteBuffer buffer;

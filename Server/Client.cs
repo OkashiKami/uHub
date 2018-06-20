@@ -31,15 +31,12 @@ namespace uHub
             try
             {
                 int readbytes = mystream.EndRead(ar);
-                if(readbytes <= 0)
+                if (readbytes > 0)
                 {
-                    CloseSocket();
-                    return;
+                    byte[] newbytes = new byte[readbytes];
+                    Buffer.BlockCopy(readbuff, 0, newbytes, 0, readbytes);
+                    ServerDataHandler.HandelData(id, newbytes);
                 }
-                byte[] newbytes = new byte[readbytes];
-                Buffer.BlockCopy(readbuff, 0, newbytes, 0, readbytes);
-                ServerDataHandler.HandelData(id, newbytes);
-
                 mystream.BeginRead(readbuff, 0, clientSocket.ReceiveBufferSize, new AsyncCallback(OnRecieveData), clientSocket);
             }
             catch (Exception ex)
