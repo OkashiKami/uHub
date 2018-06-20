@@ -16,8 +16,7 @@ namespace uHub
         public static void InitMessages()
         {
             Program.Log("Initializing Network Messages...");
-            packets.Add((long)PacketType._TransformPosition, CP_TransformPosition);
-            packets.Add((long)PacketType._TransformRotation, CP_TransformRotation);
+            packets.Add((long)PacketType._NetView, CP_NetView);
             packets.Add((long)PacketType._Leaving, CP_Leaving);
         }
 
@@ -89,7 +88,7 @@ namespace uHub
                 packet?.Invoke(id, data);
             }
         }
-        private static void CP_TransformPosition(string id, byte[] data)
+        private static void CP_NetView(string id, byte[] data)
         {
             long packetnum; ByteBuffer buffer;
             buffer = new ByteBuffer();
@@ -99,34 +98,8 @@ namespace uHub
             float x = buffer.ReadFloat();
             float y = buffer.ReadFloat();
             float z = buffer.ReadFloat();
-            Program.Log(string.Format("Client {0} position {1}", id, new Vector3(x, y, z)));
+            Program.Log(string.Format("Client {0} sent {1}", myid, Enum.GetName(typeof(PacketType), packetnum)));
             ServerTCP.Send(buffer.ToArray(), myid, true);
-            buffer.Dispose();
-
-            buffer = new ByteBuffer();
-            buffer.WriteLong((long)PacketType._GotTransformPosition);
-            buffer.WriteString(myid);
-            ServerTCP.Send(myid, buffer.ToArray());
-            buffer.Dispose();
-        }
-        private static void CP_TransformRotation(string id, byte[] data)
-        {
-            long packetnum; ByteBuffer buffer;
-            buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            packetnum = buffer.ReadLong();
-            string myid = buffer.ReadString();
-            float x = buffer.ReadFloat();
-            float y = buffer.ReadFloat();
-            float z = buffer.ReadFloat();
-            Program.Log(string.Format("Client {0} rotation {1}", id, new Vector3(x, y, z)));
-            ServerTCP.Send(buffer.ToArray(), myid, true);
-            buffer.Dispose();
-
-            buffer = new ByteBuffer();
-            buffer.WriteLong((long)PacketType._GotTransformRotation);
-            buffer.WriteString(myid);
-            ServerTCP.Send(myid, buffer.ToArray());
             buffer.Dispose();
         }
         private static void CP_Leaving(string id, byte[] data)

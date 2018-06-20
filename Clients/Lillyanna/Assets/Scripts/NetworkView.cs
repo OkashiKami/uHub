@@ -8,91 +8,68 @@ using UnityEditor;
 
 public class NetworkView : MonoBehaviour
 {
-    public bool isMine;
-    public string id;
+    public bool isMine { get; private set; }
+    public string id { get; private set; }
 
-    List<Vector3> wantPositions = new List<Vector3>();
-    List<Quaternion> wantRotations = new List<Quaternion>();
-    public float closeEnoughThreshold = 0.01f;
-    public float moveLerp = 0.8f;
-    public float rotateLerp = 0.95f;
+    public void SetId(string value) { id = value; }
+    public void SetIsMine (bool value) { isMine = value; }
+
+    private List<Vector3> wantPositions = new List<Vector3>();
+    private List<Quaternion> wantRotations = new List<Quaternion>();
+    
+
+    public enum UpdateType { Update, FixedUpdate, LateUpdate }
+    public UpdateType utype;
 
     private void Start()
     {
-        if (isMine)
-        {
-            SendPosition();
-            SendRotation();
-        }
+       
     }
 
+    private void Update()
+    {
+        if (isMine && utype == UpdateType.Update)
+        {
+            Send();
+        }
+    }
     public void FixedUpdate()
     {
-       
-        if(!isMine)
+        if (isMine && utype == UpdateType.FixedUpdate)
         {
-            ApplyPosition();
-            ApplyRotation();
+            Send();
+        }
+    }
+    private void LateUpdate()
+    {
+        if (isMine && utype == UpdateType.LateUpdate)
+        {
+            Send();
         }
     }
 
-    public void SendPosition()
+    public void Send()
     {
-        ByteBuffer buffer = new ByteBuffer();
-        buffer.WriteLong((long)PacketType._TransformPosition);
+        ByteBuffer buffer;
+
+        buffer = new ByteBuffer();
+        buffer.WriteLong((long)PacketType._NetView);
         buffer.WriteString(id);
-        float x = float.Parse(transform.position.x.ToString());
-        float y = float.Parse(transform.position.y.ToString());
-        float z = float.Parse(transform.position.z.ToString());
-        buffer.WriteFloat(x);
-        buffer.WriteFloat(y);
-        buffer.WriteFloat(z);
+
+        //Position
+        buffer.WriteFloat(float.Parse(transform.position.x.ToString()));
+        buffer.WriteFloat(float.Parse(transform.position.y.ToString()));
+        buffer.WriteFloat(float.Parse(transform.position.z.ToString()));
+
+        //Rotation
+        buffer.WriteFloat(float.Parse(transform.rotation.eulerAngles.x.ToString()));
+        buffer.WriteFloat(float.Parse(transform.rotation.eulerAngles.y.ToString()));
+        buffer.WriteFloat(float.Parse(transform.rotation.eulerAngles.z.ToString()));
+        
         ClientTCP.self.Send(buffer.ToArray());
         buffer.Dispose();
     }
-    public void SendRotation()
-    {
-        ByteBuffer buffer = new ByteBuffer();
-        buffer.WriteLong((long)PacketType._TransformRotation);
-        buffer.WriteString(id);
-        float x = float.Parse(transform.rotation.eulerAngles.x.ToString());
-        float y = float.Parse(transform.rotation.eulerAngles.y.ToString());
-        float z = float.Parse(transform.rotation.eulerAngles.z.ToString());
-        buffer.WriteFloat(x);
-        buffer.WriteFloat(y);
-        buffer.WriteFloat(z);
-        ClientTCP.self.Send(buffer.ToArray());
-        buffer.Dispose();
-    }
 
-    private void ApplyPosition()
-    {
-        if (wantPositions.Count <= 0) return;
-        if (Vector3.Distance(transform.position, wantPositions[0]) > closeEnoughThreshold)
-        {
-            transform.position = Vector3.Lerp(transform.position, wantPositions[0], moveLerp);
-        }
-        else wantPositions.RemoveAt(0);
-    }
-    public void ApplyRotation()
-    {
-        if (wantRotations.Count <= 0) return;
-        if (Quaternion.Angle(transform.rotation, wantRotations[0]) > 5)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, wantRotations[0], rotateLerp);
-        }
-        else wantRotations.RemoveAt(0);
-
-    }
-
-    public void RecievePosition(Vector3 vector)
-    {
-        wantPositions.Add(vector);
-    }
-    public void RecieveRotation(Quaternion quaternion)
-    {
-        wantRotations.Add(quaternion);
-    }
 }
 
 #if UNITY_EDITOR
@@ -102,11 +79,9 @@ public class NetworkViewEditor: Editor
     public override void OnInspectorGUI()
     {
         NetworkView view = (NetworkView)target;
+        view.utype = (NetworkView.UpdateType)EditorGUILayout.EnumPopup("Update Mode", view.utype);
         EditorGUILayout.LabelField("My ID", !string.IsNullOrEmpty(view.id) ? view.id : "Not Set");
         EditorGUILayout.LabelField("Is Mine", view.isMine.ToString());
-        view.closeEnoughThreshold = EditorGUILayout.FloatField("CET", view.closeEnoughThreshold);
-        view.moveLerp = EditorGUILayout.FloatField("Move Lerp", view.moveLerp);
-        view.rotateLerp = EditorGUILayout.FloatField("Rotate Lerp", view.rotateLerp);
         Repaint();
     }
 }

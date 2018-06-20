@@ -39,8 +39,8 @@ public class NetworkManager : MonoBehaviour
         GameObject tmp = Instantiate(prefab, spos, Quaternion.identity);
         tmp.name = string.Format("Player {0} [{1}]", id, isRemote ? "REMOTE" : "SELF");
         NetworkView view = tmp.GetComponent<NetworkView>();
-        view.id = id;
-        view.isMine = !isRemote;
+        view.SetId(id);
+        view.SetIsMine(!isRemote);
         playerlist.Add(id, view);
     }
     public void Destantiate(string id)

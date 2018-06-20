@@ -23,7 +23,7 @@ GameObject:
   m_Layer: 0
   m_Name: _NetworkManager
   m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -53,9 +53,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   client:
     IPADDRESS: 127.0.0.1
-    PORT: 2652
+    PORT: 7777
     connecting: 0
     connected: 0
   prefab: {fileID: 1856249176844894, guid: a139631037b092848a6d8730878c924a, type: 2}
   spawnpoint: {fileID: 4046690839024288}
-  myIndex: 
+  id: 

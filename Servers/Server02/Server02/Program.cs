@@ -10,6 +10,7 @@ namespace Server02
     {
         static void Main(string[] args)
         {
+            Server.Init();
         }
     }
 }

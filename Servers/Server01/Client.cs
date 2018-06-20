@@ -20,10 +20,10 @@ namespace uHub
         }
         public void Start()
         {
-            clientSocket.SendBufferSize = 4096;
-            clientSocket.ReceiveBufferSize = 4096;
+            clientSocket.SendBufferSize = 9792;
+            clientSocket.ReceiveBufferSize = 9792;
             mystream = clientSocket.GetStream();
-            readbuff = new byte[4096];
+            readbuff = new byte[9792];
             mystream.BeginRead(readbuff, 0, clientSocket.ReceiveBufferSize, new AsyncCallback(OnRecieveData), clientSocket);
         }
         private void OnRecieveData(IAsyncResult ar)

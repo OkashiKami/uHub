@@ -4,9 +4,6 @@
     _InGame = 2,
     _JoinMap = 3,
     _LeaveMap = 4,
-    _TransformPosition = 5,
-    _TransformRotation = 6,
-    _Leaving = 7,
-    _GotTransformPosition = 8,
-    _GotTransformRotation = 9,
+    _NetView = 5,
+    _Leaving = 6,    
 }

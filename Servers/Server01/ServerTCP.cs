@@ -15,7 +15,7 @@ namespace uHub
 
         public static void InitializeNetwork()
         {
-            serverSocket = new TcpListener(IPAddress.Any, 2652);
+            serverSocket = new TcpListener(IPAddress.Any, 7777);
             serverSocket.Start();
             serverSocket.BeginAcceptSocket(new AsyncCallback(OnClientConnect), null);
 
