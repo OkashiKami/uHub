@@ -96,13 +96,18 @@ namespace uHub
             buffer.WriteBytes(data);
             packetnum = buffer.ReadLong();
             string myid = buffer.ReadString();
-            //Position
             float x = buffer.ReadFloat();
             float y = buffer.ReadFloat();
             float z = buffer.ReadFloat();
-
             Program.Log(string.Format("Client {0} position {1}", id, new Vector3(x, y, z)));
             ServerTCP.Send(buffer.ToArray(), myid, true);
+            buffer.Dispose();
+
+            buffer = new ByteBuffer();
+            buffer.WriteLong((long)PacketType._GotTransformPosition);
+            buffer.WriteString(myid);
+            ServerTCP.Send(myid, buffer.ToArray());
+            buffer.Dispose();
         }
         private static void CP_TransformRotation(string id, byte[] data)
         {
@@ -111,13 +116,18 @@ namespace uHub
             buffer.WriteBytes(data);
             packetnum = buffer.ReadLong();
             string myid = buffer.ReadString();
-            //Position
             float x = buffer.ReadFloat();
             float y = buffer.ReadFloat();
             float z = buffer.ReadFloat();
-
             Program.Log(string.Format("Client {0} rotation {1}", id, new Vector3(x, y, z)));
             ServerTCP.Send(buffer.ToArray(), myid, true);
+            buffer.Dispose();
+
+            buffer = new ByteBuffer();
+            buffer.WriteLong((long)PacketType._GotTransformRotation);
+            buffer.WriteString(myid);
+            ServerTCP.Send(myid, buffer.ToArray());
+            buffer.Dispose();
         }
         private static void CP_Leaving(string id, byte[] data)
         {
@@ -133,6 +143,7 @@ namespace uHub
                     ServerTCP.clients[i].CloseSocket();
                 }
             }
+            buffer.Dispose();
         }
     }
 }

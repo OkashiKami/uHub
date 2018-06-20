@@ -7,4 +7,6 @@
     _TransformPosition = 5,
     _TransformRotation = 6,
     _Leaving = 7,
+    _GotTransformPosition = 8,
+    _GotTransformRotation = 9,
 }

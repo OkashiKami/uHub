@@ -10,7 +10,6 @@ public class NetworkView : MonoBehaviour
 {
     public bool isMine;
     public string id;
-    public float syncTime = 0.01f, time;
 
     List<Vector3> wantPositions = new List<Vector3>();
     List<Quaternion> wantRotations = new List<Quaternion>();
@@ -18,26 +17,26 @@ public class NetworkView : MonoBehaviour
     public float moveLerp = 0.8f;
     public float rotateLerp = 0.95f;
 
-    public void Update()
+    private void Start()
     {
-        time += 1 * 0.01f * Time.deltaTime;
-        if (time >= syncTime )
+        if (isMine)
         {
-            if (isMine)
-            {
-                SendPosition();
-                SendRotation();
-            }
-            else
-            {
-                ApplyPosition();
-                ApplyRotation();
-            }
-            time = 0;
+            SendPosition();
+            SendRotation();
         }
     }
 
-    private void SendPosition()
+    public void FixedUpdate()
+    {
+       
+        if(!isMine)
+        {
+            ApplyPosition();
+            ApplyRotation();
+        }
+    }
+
+    public void SendPosition()
     {
         ByteBuffer buffer = new ByteBuffer();
         buffer.WriteLong((long)PacketType._TransformPosition);
@@ -51,7 +50,7 @@ public class NetworkView : MonoBehaviour
         ClientTCP.self.Send(buffer.ToArray());
         buffer.Dispose();
     }
-    private void SendRotation()
+    public void SendRotation()
     {
         ByteBuffer buffer = new ByteBuffer();
         buffer.WriteLong((long)PacketType._TransformRotation);
@@ -105,8 +104,6 @@ public class NetworkViewEditor: Editor
         NetworkView view = (NetworkView)target;
         EditorGUILayout.LabelField("My ID", !string.IsNullOrEmpty(view.id) ? view.id : "Not Set");
         EditorGUILayout.LabelField("Is Mine", view.isMine.ToString());
-        view.syncTime = EditorGUILayout.FloatField("Sync Time", view.syncTime);
-        EditorGUILayout.Slider(view.time, 0f, view.syncTime);
         view.closeEnoughThreshold = EditorGUILayout.FloatField("CET", view.closeEnoughThreshold);
         view.moveLerp = EditorGUILayout.FloatField("Move Lerp", view.moveLerp);
         view.rotateLerp = EditorGUILayout.FloatField("Rotate Lerp", view.rotateLerp);

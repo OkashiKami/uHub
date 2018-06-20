@@ -18,6 +18,8 @@ class ClientDataHandler
         packets.Add((long)PacketType._LeaveMap, SP_LeaveMap);
         packets.Add((long)PacketType._TransformPosition, SP_TransformPosition);
         packets.Add((long)PacketType._TransformRotation, SP_TransformRotation);
+        packets.Add((long)PacketType._GotTransformPosition, SP_GotTransformPosition);
+        packets.Add((long)PacketType._GotTransformRotation, SP_GotTransformRotation);
     }
 
     public static void HandelData(byte[] data)
@@ -163,6 +165,39 @@ class ClientDataHandler
         {
             Debug.Log(string.Format("Changing {0} rotation", view.gameObject.name));
             view.RecieveRotation(Quaternion.Euler(x, y, z));
+        }
+    }
+
+    private static void SP_GotTransformPosition(byte[] data)
+    {
+        long packetnum; ByteBuffer buffer;
+        buffer = new ByteBuffer();
+        buffer.WriteBytes(data);
+        packetnum = buffer.ReadLong();
+        string id = buffer.ReadString();
+        buffer.Dispose();
+        NetworkView view = null;
+        NetworkManager.self.playerlist.TryGetValue(id, out view);
+        if (view != null && view.isMine)
+        {
+            Debug.Log(string.Format("Sending {0} position", view.gameObject.name));
+            view.SendPosition();
+        }
+    }
+    private static void SP_GotTransformRotation(byte[] data)
+    {
+        long packetnum; ByteBuffer buffer;
+        buffer = new ByteBuffer();
+        buffer.WriteBytes(data);
+        packetnum = buffer.ReadLong();
+        string id = buffer.ReadString();
+        buffer.Dispose();
+        NetworkView view = null;
+        NetworkManager.self.playerlist.TryGetValue(id, out view);
+        if (view != null && view.isMine)
+        {
+            Debug.Log(string.Format("Sending {0} rotation", view.gameObject.name));
+            view.SendRotation();
         }
     }
 }
