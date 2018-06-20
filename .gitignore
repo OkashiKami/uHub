@@ -3,4 +3,5 @@ Library
 obj
 .vs
 *.lock
-
+Clients\Lillyanna\Temp
+Clients/Lillyanna/Temp/UnityLockfile
