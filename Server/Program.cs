@@ -9,9 +9,20 @@ namespace uHub
         private static Thread threadConsole;
         private static  List<Action> actions = new List<Action>();
 
-        public static void Log(object data) { actions.Add(() => { Console.WriteLine(data);  }); }
-        public static void Log(string format, object data) { actions.Add(() => { Console.WriteLine(format, data); }); }
-
+        public static void Log(object value)
+        {
+            actions.Add(() => 
+            {
+                Console.WriteLine("[" + DateTime.Now.ToShortDateString() + "|" +  DateTime.Now.ToShortTimeString() + "] " + value);
+            });
+        }
+        public static void Log(string format, params object[] args)
+        {
+            actions.Add(() => 
+            {
+                Console.WriteLine("[" + DateTime.Now.ToShortDateString() + "|"  + DateTime.Now.ToShortTimeString() + "] " + string.Format(format, args));
+            });
+        }
 
         static void Main(string[] args)
         {

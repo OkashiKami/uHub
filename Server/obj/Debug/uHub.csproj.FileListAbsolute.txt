@@ -15,3 +15,18 @@ C:\Users\Admin\Source\repos\UNet C-Sharp Server\uHub\bin\Debug\UnityEngine.xml
 C:\Users\Admin\Source\repos\UNet C-Sharp Server\uHub\bin\Debug\UnityEngine.PhysicsModule.xml
 C:\Users\Admin\Source\repos\UNet C-Sharp Server\uHub\bin\Debug\UnityEngine.CoreModule.xml
 C:\Users\Admin\Source\repos\UNet C-Sharp Server\uHub\bin\Debug\UnityEngine.SharedInternalsModule.xml
+S:\uHub\Server\bin\Debug\uHub.exe.config
+S:\uHub\Server\bin\Debug\uHub.exe
+S:\uHub\Server\bin\Debug\uHub.pdb
+S:\uHub\Server\bin\Debug\KaymakGames.dll
+S:\uHub\Server\bin\Debug\UnityEngine.CoreModule.dll
+S:\uHub\Server\bin\Debug\UnityEngine.SharedInternalsModule.dll
+S:\uHub\Server\bin\Debug\UnityEngine.xml
+S:\uHub\Server\bin\Debug\UnityEngine.PhysicsModule.xml
+S:\uHub\Server\bin\Debug\UnityEngine.CoreModule.xml
+S:\uHub\Server\bin\Debug\UnityEngine.SharedInternalsModule.xml
+S:\uHub\Server\obj\Debug\uHub.csprojAssemblyReference.cache
+S:\uHub\Server\obj\Debug\uHub.csproj.CoreCompileInputs.cache
+S:\uHub\Server\obj\Debug\uHub.csproj.CopyComplete
+S:\uHub\Server\obj\Debug\uHub.exe
+S:\uHub\Server\obj\Debug\uHub.pdb

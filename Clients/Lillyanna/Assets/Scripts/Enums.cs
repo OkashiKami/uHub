@@ -6,4 +6,5 @@
     _LeaveMap = 4,
     _TransformPosition = 5,
     _TransformRotation = 6,
+    _Leaving = 7,
 }

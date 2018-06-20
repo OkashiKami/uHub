@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{E7B8080E-FCBF-B738-7F66-2B68C5921413}</ProjectGuid>
+    <ProjectGuid>{D8DB1CAF-81DA-072B-485F-84E98C89B957}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -130,10 +130,10 @@
     <None Include="Assets\MapMagic\Demo\Shaders\TerrainPreview.shader" />
     <None Include="Assets\MapMagic\Demo\Shaders\Tree.shader" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>S:/Games/Unity/Lillyanna - Search for Greatness/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>S:/uHub/Clients/Lillyanna/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>S:/Games/Unity/Lillyanna - Search for Greatness/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>S:/uHub/Clients/Lillyanna/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/2018.1.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -331,7 +331,7 @@
       <HintPath>C:/Program Files/Unity/2018.1.4f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="KaymakGames">
-      <HintPath>S:/Games/Unity/Lillyanna - Search for Greatness/Assets/Plugins/KaymakGames.dll</HintPath>
+      <HintPath>S:/uHub/Clients/Lillyanna/Assets/Plugins/KaymakGames.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>C:/Users/Admin/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>

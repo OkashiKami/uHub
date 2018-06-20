@@ -14,7 +14,7 @@ public class NetworkManager : MonoBehaviour
     public GameObject prefab;
     public Transform spawnpoint;
     public Dictionary<string, NetworkView> playerlist = new Dictionary<string, NetworkView>();
-    public string myIndex;
+    public string id;
    
     private void Awake()
     {
@@ -58,6 +58,13 @@ public class NetworkManager : MonoBehaviour
         ClientTCP.self.mystream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
         buffer = null;
     }
+
+    private void OnApplicationQuit()
+    {
+        ByteBuffer buffer = new ByteBuffer();
+        buffer.WriteLong((long)PacketType._Leaving);
+        buffer.WriteString(id);
+    }
 }
 #if UNITY_EDITOR
 [CustomEditor(typeof(NetworkManager))]
@@ -80,7 +87,7 @@ public class NetworkManagerEditor: Editor
         //base.OnInspectorGUI();
         GUI.skin = Resources.Load<GUISkin>("eskin");
         GUILayout.Box("Network");
-        EditorGUILayout.LabelField("ID", nm.myIndex);
+        EditorGUILayout.LabelField("ID", nm.id);
         nm.client.IPADDRESS = EditorGUILayout.TextField("IP", nm.client.IPADDRESS);
         nm.client.PORT = EditorGUILayout.IntField("PORT", nm.client.PORT);
         EditorGUILayout.BeginHorizontal();

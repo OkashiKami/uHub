@@ -15,7 +15,7 @@ namespace uHub
         {
             id = Guid.NewGuid().ToString().Split('-')[0];
             this.clientSocket = clientSocket;
-            this.ip = this.clientSocket.Client.RemoteEndPoint.ToString();
+            ip = this.clientSocket.Client.RemoteEndPoint.ToString();
             Start();
         }
         public void Start()
@@ -39,10 +39,12 @@ namespace uHub
                 byte[] newbytes = new byte[readbytes];
                 Buffer.BlockCopy(readbuff, 0, newbytes, 0, readbytes);
                 ServerDataHandler.HandelData(id, newbytes);
+
                 mystream.BeginRead(readbuff, 0, clientSocket.ReceiveBufferSize, new AsyncCallback(OnRecieveData), clientSocket);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Program.Log("Error: {0}", ex);
                 CloseSocket();
                 return;
             }
@@ -56,7 +58,7 @@ namespace uHub
                 mystream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
             buffer.Dispose();
         }
-        private void CloseSocket()
+        public void CloseSocket()
         {
             Program.Log("Connection from {0} has been terminated!", ip);
             clientSocket.Close();

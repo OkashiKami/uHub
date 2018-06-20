@@ -15,9 +15,10 @@ namespace uHub
 
         public static void InitMessages()
         {
-            Console.WriteLine("Initializing Network Messages...");
+            Program.Log("Initializing Network Messages...");
             packets.Add((long)PacketType._TransformPosition, CP_TransformPosition);
             packets.Add((long)PacketType._TransformRotation, CP_TransformRotation);
+            packets.Add((long)PacketType._Leaving, CP_Leaving);
         }
 
         public static void HandelData(string id , byte[] data)
@@ -88,7 +89,6 @@ namespace uHub
                 packet?.Invoke(id, data);
             }
         }
-
         private static void CP_TransformPosition(string id, byte[] data)
         {
             long packetnum; ByteBuffer buffer;
@@ -101,8 +101,8 @@ namespace uHub
             float y = buffer.ReadFloat();
             float z = buffer.ReadFloat();
 
-            Console.WriteLine(string.Format("Client {0} position {1}", id, new Vector3(x, y, z)));
-            ServerTCP.Send(buffer.ToArray());
+            Program.Log(string.Format("Client {0} position {1}", id, new Vector3(x, y, z)));
+            ServerTCP.Send(buffer.ToArray(), myid, true);
         }
         private static void CP_TransformRotation(string id, byte[] data)
         {
@@ -116,8 +116,23 @@ namespace uHub
             float y = buffer.ReadFloat();
             float z = buffer.ReadFloat();
 
-            Console.WriteLine(string.Format("Client {0} rotation {1}", id, new Vector3(x, y, z)));
-            ServerTCP.Send(buffer.ToArray());
+            Program.Log(string.Format("Client {0} rotation {1}", id, new Vector3(x, y, z)));
+            ServerTCP.Send(buffer.ToArray(), myid, true);
+        }
+        private static void CP_Leaving(string id, byte[] data)
+        {
+            long packetnum; ByteBuffer buffer;
+            buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            packetnum = buffer.ReadLong();
+            string myid = buffer.ReadString();
+            for (int i = 0; i < ServerTCP.clients.Count; i++)
+            {
+                if(ServerTCP.clients[i].id == myid)
+                {
+                    ServerTCP.clients[i].CloseSocket();
+                }
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace uHub
             serverSocket.Start();
             serverSocket.BeginAcceptSocket(new AsyncCallback(OnClientConnect), null);
 
-            Console.WriteLine("Server has successfully started!");
+            Program.Log("Server has successfully started!");
         }
         private static void OnClientConnect(IAsyncResult ar)
         {
@@ -29,7 +29,7 @@ namespace uHub
             clientSocket.NoDelay = false;
             Client client = new Client(clientSocket);
             clients.Add(client);
-            Console.WriteLine("Connection recieved from {0}", client.ip);
+            Program.Log("Connection recieved from {0}", client.ip);
             SendWelcomeMessage(client.id);
         }
 
@@ -42,7 +42,7 @@ namespace uHub
                 if(clients[i].id == id)
                     clients.RemoveAt(i);
             }
-            Console.WriteLine("Client Removed");
+            Program.Log("Client Removed");
         }
         public static void RemoveClient(Client client)
         {
@@ -53,7 +53,7 @@ namespace uHub
                 if (clients[i].id == client.id)
                     clients.RemoveAt(i);
             }
-            Console.WriteLine("Client removed");
+            Program.Log("Client removed");
         }
 
         public static void Send(string id, byte[] data)
@@ -66,11 +66,14 @@ namespace uHub
                 }
             }
         }
-        public static void Send(byte[] data)
+        public static void Send(byte[] data, string id, bool excudeSelf = false)
         {
-            foreach (Client c in clients) { c.Send(data); }
+            foreach (Client c in clients)
+            {
+                if(c.id != id && excudeSelf) c.Send(data);
+                else if(c.id == id && excudeSelf) { /* Do Nothing */ }
+            }
         }
-
 
         public static void SendJoinMap(string id)
         {

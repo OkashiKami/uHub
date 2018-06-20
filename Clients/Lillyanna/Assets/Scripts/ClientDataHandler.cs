@@ -96,7 +96,7 @@ class ClientDataHandler
         packetnum = buffer.ReadLong();
         string id  = buffer.ReadString();
         Debug.Log(buffer.ReadString());
-        NetworkManager.self.myIndex = id;
+        NetworkManager.self.id = id;
         NetworkManager.self.Instantiate(id);
         buffer.Dispose();
     }
@@ -108,7 +108,7 @@ class ClientDataHandler
         packetnum = buffer.ReadLong();
         string id = buffer.ReadString();
 
-        if (id == NetworkManager.self.myIndex) return;
+        if (id == NetworkManager.self.id) return;
         
 
         NetworkManager.self.Instantiate(id, true);
@@ -122,7 +122,7 @@ class ClientDataHandler
         packetnum = buffer.ReadLong();
         string id = buffer.ReadString();
 
-        if (id == NetworkManager.self.myIndex) return;
+        if (id == NetworkManager.self.id) return;
 
         NetworkManager.self.Destantiate(id);
         buffer.Dispose();

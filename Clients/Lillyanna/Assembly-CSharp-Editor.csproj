@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6F8F9BA9-5666-C7D4-2D77-9A0023957D60}</ProjectGuid>
+    <ProjectGuid>{BCA3F623-4AB7-6275-A7A3-E1B29693474C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -66,10 +66,10 @@
     <Compile Include="Assets\MapMagic\Editor\PopupMenu.cs" />
     <Compile Include="Assets\MapMagic\Editor\PreviewWindow.cs" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>S:/Games/Unity/Lillyanna - Search for Greatness/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>S:/uHub/Clients/Lillyanna/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>S:/Games/Unity/Lillyanna - Search for Greatness/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>S:/uHub/Clients/Lillyanna/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/2018.1.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -309,7 +309,7 @@
       <HintPath>C:/Program Files/Unity/2018.1.4f1/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="KaymakGames">
-      <HintPath>S:/Games/Unity/Lillyanna - Search for Greatness/Assets/Plugins/KaymakGames.dll</HintPath>
+      <HintPath>S:/uHub/Clients/Lillyanna/Assets/Plugins/KaymakGames.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/Admin/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
@@ -671,7 +671,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{E7B8080E-FCBF-B738-7F66-2B68C5921413}</Project>
+      <Project>{D8DB1CAF-81DA-072B-485F-84E98C89B957}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
   </ItemGroup>
