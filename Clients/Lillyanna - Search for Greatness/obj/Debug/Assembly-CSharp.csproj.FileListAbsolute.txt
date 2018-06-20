@@ -1,2 +1,0 @@
-S:\Games\Unity\Lillyanna - Search for Greatness\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
-S:\Games\Unity\Lillyanna - Search for Greatness\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
