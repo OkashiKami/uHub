@@ -45,10 +45,10 @@ public class ClientTCP
             {
                 _clientSocket.NoDelay = true;
                 mystream = _clientSocket.GetStream();
-                mystream.BeginRead(asyncbuff, 0, asyncbuff.Length, new AsyncCallback(OnRecieve), null);
                 connected = true;
                 connecting = false;
                 Debug.Log("Successfully connected to server");
+                mystream.BeginRead(asyncbuff, 0, 4096, new AsyncCallback(OnRecieve), null);
             }
         }
         catch (Exception)
@@ -63,20 +63,23 @@ public class ClientTCP
     {
         try
         {
-            int byteAmt = mystream.EndRead(ar);
-            byte[] mybytes = new byte[byteAmt];
-            Buffer.BlockCopy(asyncbuff, 0, mybytes, 0, byteAmt);
-            if (byteAmt == 0) return;
-
-            UThread.executeInUpdate(()=> 
+            int readbytes = mystream.EndRead(ar);
+            if(readbytes > 0)
             {
-                ClientDataHandler.HandelData(mybytes);
-            });
-            mystream.BeginRead(asyncbuff, 0, 8192, new AsyncCallback(OnRecieve), null);
+                byte[] newbytes = new byte[readbytes];
+                Buffer.BlockCopy(asyncbuff, 0, newbytes, 0, readbytes);
+                UThread.executeInUpdate(()=> 
+                {
+                    ClientDataHandler.HandelData(newbytes);
+                });
+            }
+            mystream.BeginRead(asyncbuff, 0, 4096, new AsyncCallback(OnRecieve), null);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            
+            Console.WriteLine("Error: {0}", ex);
+            CloseSocket();
+            return;
         }
     }
     public void Send(byte[] data)
@@ -87,5 +90,11 @@ public class ClientTCP
         if (_clientSocket != null && _clientSocket.Connected)
             mystream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
         buffer.Dispose();
+    }
+
+    public void CloseSocket()
+    {
+        Debug.Log("Connection from server has been terminated!");
+        _clientSocket.Close();
     }
 }

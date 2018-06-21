@@ -14,6 +14,7 @@ namespace UNetMulti
         static void Main(string[] args)
         {
             new Server();
+            while (true) { }
         }
     }
 }
