@@ -4,6 +4,10 @@ using System.Threading;
 
 namespace uHub
 {
+    using uHub.Entity;
+    using uHub.Networking;
+    using uHub.Utils;
+
     class Program
     {
         private static Thread threadConsole;

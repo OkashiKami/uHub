@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace uHub
+namespace uHub.Networking
 {
+    using uHub.Entity;
+
     class ServerTCP
     {
         public static TcpListener serverSocket;
@@ -15,11 +14,12 @@ namespace uHub
 
         public static void InitializeNetwork()
         {
-            serverSocket = new TcpListener(IPAddress.Any, 7777);
+            serverSocket = new TcpListener(IPAddress.Any, Constants.DEFAULT_PORT);
             serverSocket.Start();
             serverSocket.BeginAcceptSocket(new AsyncCallback(OnClientConnect), null);
 
             Program.Log("Server has successfully started!");
+            Program.Log("Now listening on {0}", serverSocket.Server.LocalEndPoint);
         }
         private static void OnClientConnect(IAsyncResult ar)
         {
@@ -39,21 +39,9 @@ namespace uHub
             SendLeaveMap(id);
             for (int i = 0; i < clients.Count; i++)
             {
-                if(clients[i].id == id)
-                    clients.RemoveAt(i);
+                if(clients[i].id == id) clients.RemoveAt(i);
             }
             Program.Log("Client Removed");
-        }
-        public static void RemoveClient(Client client)
-        {
-            if (clients.Count <= 0) return;
-            SendLeaveMap(client.id);
-            for (int i = 0; i < clients.Count; i++)
-            {
-                if (clients[i].id == client.id)
-                    clients.RemoveAt(i);
-            }
-            Program.Log("Client removed");
         }
 
         public static void Send(string id, byte[] data)
@@ -66,12 +54,19 @@ namespace uHub
                 }
             }
         }
-        public static void Send(byte[] data, string id, bool excudeSelf = false)
+        public static void Send(byte[] data, string id = null, bool excudeSelf = false)
         {
             foreach (Client c in clients)
             {
-                if(c.id != id && excudeSelf) c.Send(data);
-                else if(c.id == id && excudeSelf) { /* Do Nothing */ }
+                if (!string.IsNullOrEmpty(id))
+                {
+                    if (c.id != id && excudeSelf) c.Send(data);
+                    else if (c.id == id && excudeSelf)
+                    {
+                        Console.WriteLine("Can't do anything...");
+                    }
+                }
+                else c.Send(data);
             }
         }
 
@@ -115,7 +110,7 @@ namespace uHub
             ByteBuffer buffer = new ByteBuffer();
             buffer.WriteLong((long)PacketType._Welcome);
             buffer.WriteString(id);
-            buffer.WriteString("Welcome To the server...");
+            buffer.WriteString(string.Format("[{0}] Welcome To the server...", DateTime.Now.ToShortTimeString()));
             Send(id, buffer.ToArray());
             SendJoinMap(id);
             buffer.Dispose();

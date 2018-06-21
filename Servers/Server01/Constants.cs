@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace uHub
+﻿namespace uHub
 {
     class Constants
     {
         public const int MAX_PLAYERS = 100;
+        public const int MAX_BUFFER_SIZE = 4096;
+        public const int DEFAULT_PORT = 7777;
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+using uHub.Networking;
 
-namespace uHub
+namespace uHub.Utils
 {
     public class ServerDataHandler
     {
@@ -99,7 +97,7 @@ namespace uHub
             float y = buffer.ReadFloat();
             float z = buffer.ReadFloat();
             Program.Log(string.Format("Client {0} sent {1}", myid, Enum.GetName(typeof(PacketType), packetnum)));
-            ServerTCP.Send(buffer.ToArray(), myid, true);
+            ServerTCP.Send(buffer.ToArray());
             buffer.Dispose();
         }
         private static void CP_Leaving(string id, byte[] data)
@@ -109,13 +107,7 @@ namespace uHub
             buffer.WriteBytes(data);
             packetnum = buffer.ReadLong();
             string myid = buffer.ReadString();
-            for (int i = 0; i < ServerTCP.clients.Count; i++)
-            {
-                if(ServerTCP.clients[i].id == myid)
-                {
-                    ServerTCP.clients[i].CloseSocket();
-                }
-            }
+            ServerTCP.RemoveClient(myid);
             buffer.Dispose();
         }
     }

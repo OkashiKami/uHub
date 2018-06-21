@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Net.Sockets;
 
-namespace uHub
+namespace uHub.Entity
 {
+    using uHub.Networking;
+    using uHub.Utils;
+
     public class Client
     {
         public string id;
@@ -20,8 +23,8 @@ namespace uHub
         }
         public void Start()
         {
-            clientSocket.SendBufferSize = 9792;
-            clientSocket.ReceiveBufferSize = 9792;
+            clientSocket.SendBufferSize = Constants.MAX_BUFFER_SIZE;
+            clientSocket.ReceiveBufferSize = Constants.MAX_BUFFER_SIZE;
             mystream = clientSocket.GetStream();
             readbuff = new byte[9792];
             mystream.BeginRead(readbuff, 0, clientSocket.ReceiveBufferSize, new AsyncCallback(OnRecieveData), clientSocket);
@@ -37,7 +40,7 @@ namespace uHub
                     Buffer.BlockCopy(readbuff, 0, newbytes, 0, readbytes);
                     ServerDataHandler.HandelData(id, newbytes);
                 }
-                mystream.BeginRead(readbuff, 0, clientSocket.ReceiveBufferSize, new AsyncCallback(OnRecieveData), clientSocket);
+                mystream.BeginRead(readbuff, 0, Constants.MAX_BUFFER_SIZE, new AsyncCallback(OnRecieveData), clientSocket);
             }
             catch (Exception ex)
             {
@@ -59,7 +62,7 @@ namespace uHub
         {
             Program.Log("Connection from {0} has been terminated!", ip);
             clientSocket.Close();
-            ServerTCP.RemoveClient(this);
+            ServerTCP.RemoveClient(this.id);
         }
     }
 }

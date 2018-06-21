@@ -113,6 +113,7 @@
     <Compile Include="Assets\MapMagic\Main\WorldShifter.cs" />
     <Compile Include="Assets\Scripts\ClientDataHandler.cs" />
     <Compile Include="Assets\Scripts\ClientTCP.cs" />
+    <Compile Include="Assets\Scripts\Constants.cs" />
     <Compile Include="Assets\Scripts\Enums.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
