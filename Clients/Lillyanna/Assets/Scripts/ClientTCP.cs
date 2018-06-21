@@ -84,15 +84,6 @@ namespace uHub.Networking
                 return;
             }
         }
-        public void Send(byte[] data)
-        {
-            ByteBuffer buffer = new ByteBuffer();
-            buffer.WriteLong((data.GetUpperBound(0) - data.GetLowerBound(0)) + 1);
-            buffer.WriteBytes(data);
-            if (_clientSocket != null && _clientSocket.Connected)
-                mystream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
-            buffer.Dispose();
-        }
 
         public void CloseSocket()
         {

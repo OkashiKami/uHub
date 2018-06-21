@@ -67,6 +67,8 @@ namespace uHub.Networking
             ByteBuffer buffer = new ByteBuffer();
             buffer.WriteLong((long)PacketType._Leaving);
             buffer.WriteString(id);
+
+            Send(buffer.ToArray());
         }
     }
 #if UNITY_EDITOR

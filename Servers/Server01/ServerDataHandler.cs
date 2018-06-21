@@ -80,10 +80,17 @@ namespace uHub.Utils
             buffer.WriteBytes(data);
             packetnum = buffer.ReadLong();
             buffer = null;
-            if (packetnum == 0) return;
-            if (packets.TryGetValue(packetnum, out packet))
+            if (packetnum == 0)
             {
-                packet?.Invoke(id, data);
+                Program.Log("No Packet Recieved");
+                return;
+            }
+            else
+            {
+                if (packets.TryGetValue(packetnum, out packet))
+                {
+                    packet?.Invoke(id, data);
+                }
             }
         }
         private static void CP_NetView(string id, byte[] data)
@@ -102,6 +109,7 @@ namespace uHub.Utils
         }
         private static void CP_Leaving(string id, byte[] data)
         {
+            Program.Log("Someone is leaving...");
             long packetnum; ByteBuffer buffer;
             buffer = new ByteBuffer();
             buffer.WriteBytes(data);

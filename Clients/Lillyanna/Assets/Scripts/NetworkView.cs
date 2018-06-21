@@ -66,7 +66,7 @@ namespace uHub.Networking
             buffer.WriteFloat(float.Parse(transform.rotation.eulerAngles.y.ToString()));
             buffer.WriteFloat(float.Parse(transform.rotation.eulerAngles.z.ToString()));
 
-            ClientTCP.self.Send(buffer.ToArray());
+            NetworkManager.Send(buffer.ToArray());
             buffer.Dispose();
         }
 

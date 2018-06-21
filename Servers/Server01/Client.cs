@@ -40,7 +40,14 @@ namespace uHub.Entity
                     Buffer.BlockCopy(readbuff, 0, newbytes, 0, readbytes);
                     ServerDataHandler.HandelData(id, newbytes);
                 }
-                mystream.BeginRead(readbuff, 0, Constants.MAX_BUFFER_SIZE, new AsyncCallback(OnRecieveData), clientSocket);
+                try
+                {
+                    mystream.BeginRead(readbuff, 0, Constants.MAX_BUFFER_SIZE, new AsyncCallback(OnRecieveData), clientSocket);
+                }
+                catch(Exception e)
+                {
+                    CloseSocket();
+                }
             }
             catch (Exception ex)
             {
