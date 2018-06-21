@@ -25,7 +25,7 @@ public class ClientTCP
         _clientSocket.ReceiveBufferSize = 4096;
         _clientSocket.SendBufferSize = 4096;
         _clientSocket.NoDelay = false;
-        asyncbuff = new byte[8192];
+        asyncbuff = new byte[4096];
         _clientSocket.BeginConnect(IPADDRESS, PORT, new AsyncCallback(ConnectCallback), _clientSocket);
         connecting = true;
     }
@@ -45,7 +45,7 @@ public class ClientTCP
             {
                 _clientSocket.NoDelay = true;
                 mystream = _clientSocket.GetStream();
-                mystream.BeginRead(asyncbuff, 0, 8192, new AsyncCallback(OnRecieve), null);
+                mystream.BeginRead(asyncbuff, 0, asyncbuff.Length, new AsyncCallback(OnRecieve), null);
                 connected = true;
                 connecting = false;
                 Debug.Log("Successfully connected to server");
