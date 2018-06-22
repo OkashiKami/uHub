@@ -6,6 +6,7 @@ using System.Net.Sockets;
 namespace uHub
 {
     using uHub.Entities;
+    using uHub.Utils;
 
     class ServerTCP
     {
