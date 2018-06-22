@@ -5,9 +5,9 @@
 
     public static class ItemDatabase
     {
-        public static Item HealthPotion1 = new Item (name: "Health v1", description: "This is a level 1 health potion", isStackable: true);
-        public static Item HealthPotion2 = new Item (name: "Health v2", description: "This is a level 2 health potion", isStackable: true);
-        public static Item HealthPotion3 = new Item (name: "Health v3", description: "This is a level 3 health potion", isStackable: true);
+        public static Item HealthPotion1 = new Item (name: "Health Potion", description: "This is a level 1 health potion", level: 1, isStackable: true);
+        public static Item HealthPotion2 = new Item (name: "Health Potion", description: "This is a level 2 health potion", level: 2, isStackable: true);
+        public static Item HealthPotion3 = new Item (name: "Health Potion", description: "This is a level 3 health potion", level: 3, isStackable: true);
     }
     public static class EntityDatabase
     {

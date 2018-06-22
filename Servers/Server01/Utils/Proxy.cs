@@ -3,7 +3,6 @@
 namespace uHub.Utils
 {
     using uHub.Entities;
-    using uHub.Networking;
 
     public class Proxy
     {

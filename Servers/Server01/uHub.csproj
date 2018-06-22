@@ -53,18 +53,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Database.cs" />
+    <Compile Include="Entities\Client.cs" />
+    <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Database\Database.cs" />
     <Compile Include="Database\Entity.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="Utils\Enums.cs" />
     <Compile Include="Database\Item.cs" />
+    <Compile Include="Database\Inventory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Proxy.cs" />
-    <Compile Include="ServerDataHandler.cs" />
+    <Compile Include="Utils\Proxy.cs" />
+    <Compile Include="Utils\ServerDataHandler.cs" />
     <Compile Include="ServerTCP.cs" />
-    <Compile Include="Types.cs" />
+    <Compile Include="Utils\Types.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

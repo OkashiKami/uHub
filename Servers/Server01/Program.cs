@@ -32,7 +32,7 @@ namespace uHub
             threadConsole = new Thread(new ThreadStart(ConsoleThread));
             SetupServer();
             threadConsole.Start();
-            
+                        
 
         }
 

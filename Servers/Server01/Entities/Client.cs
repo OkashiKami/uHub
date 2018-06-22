@@ -4,7 +4,6 @@ using System.Net.Sockets;
 namespace uHub.Entities
 {
     using uHub.Databse;
-    using uHub.Networking;
     using uHub.Utils;
 
     public class Client
@@ -15,13 +14,14 @@ namespace uHub.Entities
         public NetworkStream mystream;
         private byte[] readbuff;
 
-        public Inventory inventory = new Inventory();
+        public Inventory inventory;
 
         public Client(TcpClient clientSocket)
         {
             id = Guid.NewGuid().ToString().Split('-')[0];
             this.clientSocket = clientSocket;
             ip = this.clientSocket.Client.RemoteEndPoint.ToString();
+            inventory = new Inventory();
             Start();
         }
         public void Start()

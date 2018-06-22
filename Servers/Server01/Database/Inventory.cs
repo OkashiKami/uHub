@@ -35,23 +35,24 @@ namespace uHub.Databse
                                 if(sourceItem.curStack < sourceItem.maxStack)
                                 {
                                     sourceItem.curStack += 1;
-                                    return;
+                                    break;
                                 }
                                 else
                                 {
                                     items.Add(newItem);
-                                    return;
+                                    break;
                                 }
                             }
                             else
                             {
                                 items.Add(newItem);
-                                return;
+                                break; ;
                             }
                         }
                     }
                 }
             }
+            Program.Log("Adding {0} {1} Lv{2}", amount, newItem.name, newItem.level);
         }
     }
 }
