@@ -4,8 +4,7 @@ using System.Threading;
 
 namespace uHub
 {
-    using uHub.Entity;
-    using uHub.Networking;
+    using uHub.Entities;
     using uHub.Utils;
 
     class Program
