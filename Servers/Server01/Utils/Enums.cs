@@ -1,4 +1,4 @@
-﻿namespace uHub
+﻿namespace uHub.Utils
 {
     public enum PacketType
     {

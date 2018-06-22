@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace uHub
+namespace uHub.Utils
 {
     class Types
     {

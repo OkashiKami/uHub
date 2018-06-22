@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net.Sockets;
 
-namespace uHub.Entity
+namespace uHub.Entities
 {
+    using uHub.Databse;
     using uHub.Networking;
     using uHub.Utils;
 
@@ -13,6 +14,8 @@ namespace uHub.Entity
         public TcpClient clientSocket;
         public NetworkStream mystream;
         private byte[] readbuff;
+
+        public Inventory inventory = new Inventory();
 
         public Client(TcpClient clientSocket)
         {
@@ -44,9 +47,11 @@ namespace uHub.Entity
                 {
                     mystream.BeginRead(readbuff, 0, Constants.MAX_BUFFER_SIZE, new AsyncCallback(OnRecieveData), clientSocket);
                 }
-                catch(Exception e)
+                catch(Exception ex)
                 {
+                    Program.Log("Error: {0}", ex);
                     CloseSocket();
+                    return;
                 }
             }
             catch (Exception ex)
@@ -56,20 +61,11 @@ namespace uHub.Entity
                 return;
             }
         }
-        public void Send(byte[] data)
-        {
-            ByteBuffer buffer = new ByteBuffer();
-            buffer.WriteLong((data.GetUpperBound(0) - data.GetLowerBound(0)) + 1);
-            buffer.WriteBytes(data);
-            if(clientSocket != null && clientSocket.Connected)
-                mystream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
-            buffer.Dispose();
-        }
         public void CloseSocket()
         {
             Program.Log("Connection from {0} has been terminated!", ip);
             clientSocket.Close();
-            ServerTCP.RemoveClient(this.id);
+            ServerTCP.RemoveClient(id);
         }
     }
 }
