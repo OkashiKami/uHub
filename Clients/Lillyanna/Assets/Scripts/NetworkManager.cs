@@ -22,7 +22,6 @@ namespace uHub.Networking
         {
             self = this;
             DontDestroyOnLoad(this.gameObject);
-            ClientDataHandler.InitMessages();
             UThread.initUnityThread();
         }
 
@@ -44,6 +43,7 @@ namespace uHub.Networking
             NetworkView view = tmp.GetComponent<NetworkView>();
             view.SetId(id);
             view.SetIsMine(!isRemote);
+            if (!view.isMine) Destroy(tmp.GetComponent<Orbit>());
             playerlist.Add(id, view);
         }
         public void Destantiate(string id)
@@ -53,22 +53,10 @@ namespace uHub.Networking
             if (view) Destroy(view.gameObject);
         }
 
-        public static void Send(byte[] data)
-        {
-            ByteBuffer buffer = new ByteBuffer();
-            buffer.WriteLong((data.GetUpperBound(0) - data.GetLowerBound(0)) + 1);
-            buffer.WriteBytes(data);
-            ClientTCP.self.mystream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
-            buffer = null;
-        }
 
         private void OnApplicationQuit()
         {
-            ByteBuffer buffer = new ByteBuffer();
-            buffer.WriteLong((long)PacketType._Leaving);
-            buffer.WriteString(id);
-
-            Send(buffer.ToArray());
+            client.CloseSocket();
         }
     }
 #if UNITY_EDITOR

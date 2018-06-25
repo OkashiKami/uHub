@@ -111,14 +111,12 @@
     <Compile Include="Assets\MapMagic\Main\ThreadWorker.cs" />
     <Compile Include="Assets\MapMagic\Main\WeldTerrains.cs" />
     <Compile Include="Assets\MapMagic\Main\WorldShifter.cs" />
-    <Compile Include="Assets\Scripts\ClientDataHandler.cs" />
+    <Compile Include="Assets\Orbit.cs" />
     <Compile Include="Assets\Scripts\ClientTCP.cs" />
     <Compile Include="Assets\Scripts\Constants.cs" />
-    <Compile Include="Assets\Scripts\Enums.cs" />
-    <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\NetworkView.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\Packet.cs" />
     <Compile Include="Assets\Scripts\UThread.cs" />
     <None Include="Assets\MapMagic\Demo\Shaders\LeafFunctions.cginc" />
     <None Include="Assets\MapMagic\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />

@@ -49,6 +49,15 @@ namespace uHub
         {
             while (true)
             {
+                for (int i = 0; i < ServerTCP.clients.Count; i++)
+                {
+                    if (ServerTCP.clients[i].isClosed)
+                    {
+                        ServerTCP.clients.RemoveAt(i);
+                        Log("Client Removed");
+                    }
+
+                }
                 if(actions.Count > 0)
                 {
                     actions[0]?.Invoke();

@@ -18,8 +18,10 @@ namespace uHub.Networking
         private List<Quaternion> wantRotations = new List<Quaternion>();
 
 
-        public enum UpdateType { Update, FixedUpdate, LateUpdate }
+        public enum UpdateType { Update, FixedUpdate, LateUpdate, TimedUpdate, TimedFixedUpdate, None}
         public UpdateType utype;
+
+        public float time = 0, wantTime = 1;
 
         private void Start()
         {
@@ -32,12 +34,32 @@ namespace uHub.Networking
             {
                 Send();
             }
+
+            if(utype == UpdateType.TimedUpdate)
+            {
+                time += Time.deltaTime;
+                if(time >= wantTime)
+                {
+                    Send();
+                    time = 0;
+                }
+            }
+
         }
         public void FixedUpdate()
         {
             if (isMine && utype == UpdateType.FixedUpdate)
             {
                 Send();
+            }
+            if (utype == UpdateType.TimedFixedUpdate)
+            {
+                time += Time.fixedDeltaTime;
+                if (time >= wantTime)
+                {
+                    Send();
+                    time = 0;
+                }
             }
         }
         private void LateUpdate()
@@ -50,26 +72,22 @@ namespace uHub.Networking
 
         public void Send()
         {
-            ByteBuffer buffer;
+            Packet p = new Packet();
+            p.WriteString("-NetviewUpdate");
+            p.WriteString(NetworkManager.self.id);
+            p.WriteFloat(transform.position.x);
+            p.WriteFloat(transform.position.y);
+            p.WriteFloat(transform.position.z); 
+            p.WriteFloat(transform.rotation.eulerAngles.x);
+            p.WriteFloat(transform.rotation.eulerAngles.y);
+            p.WriteFloat(transform.rotation.eulerAngles.z);
 
-            buffer = new ByteBuffer();
-            buffer.WriteLong((long)PacketType._NetView);
-            buffer.WriteString(id);
-
-            //Position
-            buffer.WriteFloat(float.Parse(transform.position.x.ToString()));
-            buffer.WriteFloat(float.Parse(transform.position.y.ToString()));
-            buffer.WriteFloat(float.Parse(transform.position.z.ToString()));
-
-            //Rotation
-            buffer.WriteFloat(float.Parse(transform.rotation.eulerAngles.x.ToString()));
-            buffer.WriteFloat(float.Parse(transform.rotation.eulerAngles.y.ToString()));
-            buffer.WriteFloat(float.Parse(transform.rotation.eulerAngles.z.ToString()));
-
-            NetworkManager.Send(buffer.ToArray());
-            buffer.Dispose();
+            NetworkManager.self.client.Send(p.Serialize());
         }
+        public void Apply(float x1, float y1, float z1, float x2, float y2, float z2)
+        {
 
+        }
     }
 
 #if UNITY_EDITOR
@@ -78,10 +96,19 @@ namespace uHub.Networking
     {
         public override void OnInspectorGUI()
         {
+            GUI.skin = Resources.Load<GUISkin>("eskin");
+            Repaint();
+            
             NetworkView view = (NetworkView)target;
             view.utype = (NetworkView.UpdateType)EditorGUILayout.EnumPopup("Update Mode", view.utype);
             EditorGUILayout.LabelField("My ID", !string.IsNullOrEmpty(view.id) ? view.id : "Not Set");
             EditorGUILayout.LabelField("Is Mine", view.isMine.ToString());
+            if (view.utype == NetworkView.UpdateType.TimedUpdate || view.utype == NetworkView.UpdateType.TimedFixedUpdate)
+            {
+                view.wantTime = EditorGUILayout.FloatField("Want Time", view.wantTime);
+                var percentage = (view.time / view.wantTime) * 100;
+                EditorGUILayout.Slider("%", percentage, 0, 100);
+            }   
             Repaint();
         }
     }

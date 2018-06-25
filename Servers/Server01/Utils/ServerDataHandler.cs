@@ -4,7 +4,7 @@ namespace uHub.Utils
 {
     public class ServerDataHandler
     {
-        private delegate void Packet_(string id, byte[] data);
+        private delegate void Packet_(byte[] data);
         private static Dictionary<long, Packet_> packets = new Dictionary<long, Packet_>();
         public static long pLength;
 
@@ -85,7 +85,7 @@ namespace uHub.Utils
             {
                 if (packets.TryGetValue(packetnum, out packet))
                 {
-                    packet?.Invoke(id, data);
+                    packet?.Invoke(data);
                 }
             }
         }

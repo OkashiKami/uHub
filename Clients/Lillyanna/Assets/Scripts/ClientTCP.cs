@@ -11,10 +11,10 @@ namespace uHub.Networking
     {
         public static ClientTCP self;
         public string IPADDRESS = "127.0.0.1";
-        public TcpClient _clientSocket;
+        public TcpClient socket;
         public bool connecting, connected;
-        public NetworkStream mystream;
-        private byte[] asyncbuff;
+        private byte[] buffer;
+        public SocketError errorCode;
 
         public ClientTCP()
         {
@@ -23,12 +23,12 @@ namespace uHub.Networking
 
         public void Connect()
         {
-            _clientSocket = new TcpClient();
-            _clientSocket.ReceiveBufferSize = Constants.MAX_BUFFER_SIZE;
-            _clientSocket.SendBufferSize = Constants.MAX_BUFFER_SIZE;
-            _clientSocket.NoDelay = false;
-            asyncbuff = new byte[Constants.MAX_BUFFER_SIZE];
-            _clientSocket.BeginConnect(IPADDRESS, Constants.DEFAULT_PORT, new AsyncCallback(ConnectCallback), _clientSocket);
+            socket = new TcpClient();
+            socket.ReceiveBufferSize = Constants.MAX_BUFFER_SIZE;
+            socket.SendBufferSize = Constants.MAX_BUFFER_SIZE;
+            socket.NoDelay = false;
+            buffer = new byte[Constants.MAX_BUFFER_SIZE];
+            socket.BeginConnect(IPADDRESS, Constants.DEFAULT_PORT, new AsyncCallback(ConnectCallback), socket);
             connecting = true;
         }
 
@@ -36,8 +36,8 @@ namespace uHub.Networking
         {
             try
             {
-                _clientSocket.EndConnect(ar);
-                if (!_clientSocket.Connected)
+                socket.EndConnect(ar);
+                if (!socket.Connected)
                 {
                     connected = false;
                     connecting = false;
@@ -45,12 +45,11 @@ namespace uHub.Networking
                 }
                 else
                 {
-                    _clientSocket.NoDelay = true;
-                    mystream = _clientSocket.GetStream();
+                    socket.NoDelay = true;
                     connected = true;
                     connecting = false;
                     Debug.Log("Successfully connected to server");
-                    mystream.BeginRead(asyncbuff, 0, Constants.MAX_BUFFER_SIZE, new AsyncCallback(OnRecieve), null);
+                    socket.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, out errorCode, new AsyncCallback(OnReceive), socket);
                 }
             }
             catch (Exception)
@@ -61,34 +60,91 @@ namespace uHub.Networking
 
             }
         }
-        private void OnRecieve(IAsyncResult ar)
+
+
+        public void Send(byte[] buffer)
         {
-            try
+            socket.Client.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(OnSend), socket);
+        }
+        public void Send(Packet packet)
+        {
+            var buffer = packet.Serialize();
+            socket.Client.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(OnSend), socket);
+        }
+
+        private void OnSend(IAsyncResult ar)
+        {
+            int numberofbytes = socket.Client.EndSend(ar);
+            Debug.Log(string.Format("{0} of bytes where sent", numberofbytes));
+        }
+        private void OnReceive(IAsyncResult ar)
+        {
+            int numberofbytes = socket.Client.EndReceive(ar);
+            Packet p = new Packet().Deserialize(buffer);
+            if (numberofbytes <= 0) { Debug.Log("Not enough bytes read"); }
+            else
             {
-                int readbytes = mystream.EndRead(ar);
-                if (readbytes > 0)
+                var cmd = p.ReadString();
+
+                if (cmd == "-welcome")
                 {
-                    byte[] newbytes = new byte[readbytes];
-                    Buffer.BlockCopy(asyncbuff, 0, newbytes, 0, readbytes);
+                    var id = p.ReadString();
+                    var msg = p.ReadString();
+                    UThread.executeInUpdate(() => { NetworkManager.self.Instantiate(id); });
+                    if(!string.IsNullOrEmpty(msg)) Debug.Log("Recieved: " + msg);
+                }
+                else if (cmd == "-welcomeremote")
+                {
+                    var id = p.ReadString();
+                    var msg = p.ReadString();
+                    UThread.executeInUpdate(() => { NetworkManager.self.Instantiate(id, true); });
+                    if (!string.IsNullOrEmpty(msg)) Debug.Log("Recieved: " + msg);
+                }
+                else if(cmd == "-netviewupdate")
+                {
                     UThread.executeInUpdate(() =>
                     {
-                        ClientDataHandler.HandelData(newbytes);
+                        foreach(NetworkView nv in UnityEngine.Object.FindObjectsOfType<NetworkView>())
+                        {
+                            if(nv.id == p.ReadString() && !nv.isMine)
+                            {
+                                Debug.Log("Networkview has been found");
+                                nv.Apply(p.ReadFloat(), p.ReadFloat(), p.ReadFloat(), p.ReadFloat(), p.ReadFloat(), p.ReadFloat());
+                            }
+                        }
                     });
                 }
-                mystream.BeginRead(asyncbuff, 0, Constants.MAX_BUFFER_SIZE, new AsyncCallback(OnRecieve), null);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: {0}", ex);
-                CloseSocket();
-                return;
+                else if(cmd == "-remoteleft")
+                {
+                    var id = p.ReadString();
+                    UThread.executeInUpdate(() => 
+                    {
+                        NetworkView[] nvs = UnityEngine.Object.FindObjectsOfType<NetworkView>();
+                        foreach (NetworkView nv in nvs)
+                        {
+                            if (nv.id == id)
+                                UnityEngine.Object.DestroyImmediate(nv.gameObject);
+                        }
+                    });
+                }
+
+                if(!string.IsNullOrEmpty(cmd)) Debug.Log("Recieved: " + cmd);
+                p.Dispose();
+                socket.Client.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, out errorCode, new AsyncCallback(OnReceive), socket);
             }
         }
 
         public void CloseSocket()
         {
+            Packet p = new Packet();
+            p.WriteString("-closing");
+            p.WriteString(NetworkManager.self.id);
+            p.WriteString("Leaving, logging off...");
+            
+            Send(p.Serialize());
+            p.Dispose();
             Debug.Log("Connection from server has been terminated!");
-            _clientSocket.Close();
+            socket.Close();
         }
     }
 
