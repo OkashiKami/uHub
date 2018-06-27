@@ -18,17 +18,77 @@ public class Packet : IDisposable
         this.data = data == null ? new List<object>() : data;
     }
 
-    public void WriteString(string value) { data.Add(value); }
-    public void WriteInt(int value) { if (data != null) data.Add(value); }
-    public void WriteFloat(float value) { if (data != null) data.Add(value); }
-    public void WriteBool(bool value) { if (data != null) data.Add(value); }
-    public void WriteObject(object value) { if (data != null) data.Add(value); }
+    public void WriteString(string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+            data.Add(value);
+    }
+    public void WriteInt(int value)
+    {
+        data.Add(value);
+    }
+    public void WriteFloat(float value)
+    {
+        data.Add(value);
+    }
+    public void WriteBool(bool value)
+    {
+        data.Add(value);
+    }
+    public void WriteObject(object value)
+    {
+        if (value != null)
+            data.Add(value);
+    }
 
-    public string ReadString() { var value = (string)data[0]; data.RemoveAt(0); return value; }
-    public int ReadInt() { var value = (int)data[0]; data.RemoveAt(0); return value; }
-    public float ReadFloat() { var value = (float)data[0]; data.RemoveAt(0); return value; }
-    public bool ReadBool() { var value = (bool)data[0]; data.RemoveAt(0); return value; }
-    public object ReadObject() { var value = data[0]; data.RemoveAt(0); return value; }
+    public string ReadString()
+    {
+        try
+        {
+            var value = (string)data[0];
+            data.RemoveAt(0);
+            return value;
+        }
+        catch { return default(string); }
+    }
+    public int ReadInt() {
+        try
+        {
+            var value = (int)data[0];
+            data.RemoveAt(0);
+            return value;
+        }
+        catch { return default(int); }
+    }
+    public float ReadFloat()
+    {
+        try
+        {
+            var value = (float)data[0];
+            data.RemoveAt(0);
+            return value;
+        }
+        catch { return default(float); }
+    }
+    public bool ReadBool()
+    {
+        try {
+            var value = (bool)data[0];
+            data.RemoveAt(0);
+            return value;
+        }
+        catch { return default(bool); }
+    }
+    public object ReadObject()
+    {
+        try
+        {
+            var value = data[0];
+            data.RemoveAt(0);
+            return value;
+        }
+        catch { return default(object); }
+    }
 
     public byte[] Serialize()
     {

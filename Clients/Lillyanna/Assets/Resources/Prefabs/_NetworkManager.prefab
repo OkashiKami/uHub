@@ -51,11 +51,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2ec59375f50a06459cc3835eb6714b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  client:
-    IPADDRESS: 127.0.0.1
-    PORT: 7777
-    connecting: 0
-    connected: 0
   prefab: {fileID: 1856249176844894, guid: a139631037b092848a6d8730878c924a, type: 2}
   spawnpoint: {fileID: 4046690839024288}
   id: 
+  IPADDRESS: 127.0.0.1
+  connecting: 0
+  connected: 0
+  errorCode: 0
+  ConnectOnStart: 1

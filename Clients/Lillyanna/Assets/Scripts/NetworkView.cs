@@ -25,7 +25,7 @@ namespace uHub.Networking
 
         private void Start()
         {
-
+            time = wantTime;
         }
 
         private void Update()
@@ -34,7 +34,6 @@ namespace uHub.Networking
             {
                 Send();
             }
-
             if(utype == UpdateType.TimedUpdate)
             {
                 time += Time.deltaTime;
@@ -44,7 +43,6 @@ namespace uHub.Networking
                     time = 0;
                 }
             }
-
         }
         public void FixedUpdate()
         {
@@ -73,7 +71,7 @@ namespace uHub.Networking
         public void Send()
         {
             Packet p = new Packet();
-            p.WriteString("-NetviewUpdate");
+            p.WriteString("-netviewupdate");
             p.WriteString(NetworkManager.self.id);
             p.WriteFloat(transform.position.x);
             p.WriteFloat(transform.position.y);
@@ -81,12 +79,12 @@ namespace uHub.Networking
             p.WriteFloat(transform.rotation.eulerAngles.x);
             p.WriteFloat(transform.rotation.eulerAngles.y);
             p.WriteFloat(transform.rotation.eulerAngles.z);
-
-            NetworkManager.self.client.Send(p.Serialize());
+            NetworkManager.self.Send(p.Serialize());
         }
         public void Apply(float x1, float y1, float z1, float x2, float y2, float z2)
         {
-
+            transform.position = new Vector3(x1, y1, z1);
+            transform.rotation= Quaternion.Euler(x2, y2, z2);
         }
     }
 
